@@ -1,14 +1,39 @@
-#ifndef __SCR_TEXT_H__
-#define __SCR_TEXT_H__
+#ifndef __GRAPHICS_H__
+#define __GRAPHICS_H__
 
-#define ST_MAX_LENGTH 40 // 2 full rows of gb screen
+#include "types.h"
+// ================================================================================================
+#define G_WIDTH 20
+#define G_HEIGHT 18
+// ================================================================================================
+uint8_t gb_frames = 0;
+// ================================================================================================
+g_text g_str2hex(g_text chars);
+void g_sync_framecount(void);
+uint8_t g_text_char2hex(const char ch);
+// ================================================================================================
+g_text g_text_text2hex(g_text chars) {
+	g_text hex = { .text="", .pos={chars.pos.x, chars.pos.y} };
+	
+	for (uint8_t i = 0; i < strlen(chars.text); i++) {
+		hex.text[i] = g_text_char2hex(chars.text[i]);
+	}
+	
+	return hex;
+}
 
-typedef struct {
-	uint8_t text[ST_MAX_LENGTH];
-	t_pos pos;
-} st_str;
+void g_sync_framecount(void) {
+	switch (gb_frames) {
+		case 60: // max = 59
+			gb_frames = 0; // min = 0
+			break;
+		default:
+			gb_frames++;
+			break;
+	}
+}
 
-uint8_t st_char2hex(const char ch) {
+uint8_t g_text_char2hex(const char ch) {
 	switch (ch) {
 		case ' ': return 0x00;
 		case '0': return 0x01;
@@ -56,14 +81,5 @@ uint8_t st_char2hex(const char ch) {
 	}
 }
 
-st_str st_text2hex(st_str chars) {
-	st_str hex = { .text="", .pos={chars.pos.x, chars.pos.y} };
-	
-	for (uint8_t i = 0; i < strlen(chars.text); i++) {
-		hex.text[i] = st_char2hex(chars.text[i]);
-	}
-	
-	return hex;
-}
+#endif // !__GRAPHICS_H__
 
-#endif // !__SCR_TEXT_H__
