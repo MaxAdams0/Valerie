@@ -4,6 +4,6 @@
 png2asset .\res\text_set.png -map -spr8x8 -no_palettes -noflip
 
 :: compile all c and h into gb binary
-C:\gbdk\bin\lcc.exe -o ValkCP.gb src/*.c res/*.c -Wm-yC
+C:\gbdk\bin\lcc.exe -o ValkCP.gb src/*.c src/low/*.c res/*.c -Wm-yC
 timeout /t 10 /nobreak
 cls

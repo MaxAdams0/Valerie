@@ -8,9 +8,10 @@
 #include <gb/metasprites.h>
 
 #include "all.h"
-
 // text tileset
 #include "../res/text_set.h"
+
+
 const UWORD text_pal[] = { // temp
 	RGB8(0, 7, 18), RGB8(250, 211, 17), RGB_BLACK, RGB_BLACK
 };
@@ -21,7 +22,8 @@ void main(void) {
 	
 	set_bkg_palette(0, 1, text_pal);
 	set_bkg_data(0, text_set_TILE_COUNT, text_set_tiles);
-	dm_add_text(g_text_text2hex(dm_txt_datamine));
+	dmAddText(textToHex(DM_TITLE));
+	dmPopPuzzle();
 	
 	DISPLAY_ON;
 	SHOW_SPRITES;
@@ -29,15 +31,22 @@ void main(void) {
 	// Game Loop
 	while(1) { 
 		inp_current = joypad();
-		dm_update_ice();
 		
-		if (inp_if_press(inp_current, inp_last, J_A)) {
+		if (inpKeyPressed(inp_current, inp_last, J_START)) {
+			dm_enabled = true;
+			genSeed();
+		}
+		
+		dmUpdateIce();
+		dmAddText(textToHex(dm_ice));
+		
+		if (inpKeyPressed(inp_current, inp_last, J_START)) {
 			snd_test_sound();
 		}
 		
 		set_bkg_tiles(0, 0, 20, 18, (const uint8_t *)dm_tilemap);
 		
-		g_sync_framecount();
+		syncFramecount();
 		inp_last = inp_current;
 		wait_vbl_done();
 	}
